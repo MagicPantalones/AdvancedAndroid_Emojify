@@ -96,24 +96,29 @@ class Emojifier {
 
         Emoji emoji;
 
-        if (smiling && leftEyeOpen && rightEyeOpen){
-            emoji = Emoji.SMILING;
-        } else if (!smiling && leftEyeOpen && rightEyeOpen) {
-            emoji = Emoji.FROWNING;
-        } else if (smiling && !leftEyeOpen && rightEyeOpen) {
-            emoji = Emoji.LEFT_WINK;
-        } else if (!smiling && !leftEyeOpen && rightEyeOpen) {
-            emoji = Emoji.LEFT_WINK_FROWNING;
-        } else if (smiling && leftEyeOpen && !rightEyeOpen) {
-            emoji = Emoji.RIGHT_WINK;
-        } else if (!smiling && leftEyeOpen && !rightEyeOpen) {
-            emoji = Emoji.RIGHT_WINK_FROWNING;
-        } else if (smiling && !leftEyeOpen && !rightEyeOpen) {
-            emoji = Emoji.CLOSED_EYE_SMILING;
+        if (smiling) {
+            if (leftEyeOpen && !rightEyeOpen) {
+                emoji = Emoji.LEFT_WINK;
+            } else if (rightEyeOpen && !leftEyeOpen){
+                emoji = Emoji.RIGHT_WINK;
+            } else if (!leftEyeOpen) {
+                emoji = Emoji.CLOSED_EYE_SMILING;
+            } else {
+                emoji = Emoji.SMILING;
+            }
         } else {
-            emoji = Emoji.CLOSED_EYE_FROWNING;
+            if (leftEyeOpen && !rightEyeOpen) {
+                emoji = Emoji.LEFT_WINK_FROWNING;
+            } else if (rightEyeOpen && !leftEyeOpen){
+                emoji = Emoji.RIGHT_WINK_FROWNING;
+            } else if (!leftEyeOpen) {
+                emoji = Emoji.CLOSED_EYE_FROWNING;
+            } else {
+                emoji = Emoji.FROWNING;
+            }
         }
 
+        Log.d(LOG_TAG, "Emoji: " + emoji.name());
         // TODO (3): Create threshold constants for a person smiling, and and eye being open by taking pictures of yourself and your friends and noting the logs.
         // TODO (4): Create 3 boolean variables to track the state of the facial expression based on the thresholds you set in the previous step: smiling, left eye closed, right eye closed.
         // TODO (5): Create an if/else system that selects the appropriate emoji based on the above booleans and log the result.
