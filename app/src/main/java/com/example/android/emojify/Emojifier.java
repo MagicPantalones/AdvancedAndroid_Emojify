@@ -30,6 +30,9 @@ class Emojifier {
 
     private static final String LOG_TAG = Emojifier.class.getSimpleName();
 
+    private static final double SMILING_PROB_TRESHOLD = 0.15;
+    private static final double EYE_OPEN_PROB_TRESHOLD = 0.5;
+
     /**
      * Method for detecting faces in a bitmap.
      *
@@ -86,6 +89,30 @@ class Emojifier {
                 + face.getIsLeftEyeOpenProbability());
         Log.d(LOG_TAG, "whichEmoji: rightEyeOpenProb = "
                 + face.getIsRightEyeOpenProbability());
+
+        boolean smiling = face.getIsSmilingProbability() > SMILING_PROB_TRESHOLD;
+        boolean leftEyeOpen = face.getIsLeftEyeOpenProbability() > EYE_OPEN_PROB_TRESHOLD;
+        boolean rightEyeOpen = face.getIsRightEyeOpenProbability() > EYE_OPEN_PROB_TRESHOLD;
+
+        Emoji emoji;
+
+        if (smiling && leftEyeOpen && rightEyeOpen){
+            emoji = Emoji.SMILING;
+        } else if (!smiling && leftEyeOpen && rightEyeOpen) {
+            emoji = Emoji.FROWNING;
+        } else if (smiling && !leftEyeOpen && rightEyeOpen) {
+            emoji = Emoji.LEFT_WINK;
+        } else if (!smiling && !leftEyeOpen && rightEyeOpen) {
+            emoji = Emoji.LEFT_WINK_FROWNING;
+        } else if (smiling && leftEyeOpen && !rightEyeOpen) {
+            emoji = Emoji.RIGHT_WINK;
+        } else if (!smiling && leftEyeOpen && !rightEyeOpen) {
+            emoji = Emoji.RIGHT_WINK_FROWNING;
+        } else if (smiling && !leftEyeOpen && !rightEyeOpen) {
+            emoji = Emoji.CLOSED_EYE_SMILING;
+        } else {
+            emoji = Emoji.CLOSED_EYE_FROWNING;
+        }
 
         // TODO (3): Create threshold constants for a person smiling, and and eye being open by taking pictures of yourself and your friends and noting the logs.
         // TODO (4): Create 3 boolean variables to track the state of the facial expression based on the thresholds you set in the previous step: smiling, left eye closed, right eye closed.
